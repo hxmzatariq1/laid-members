@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LAID Members Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --disp:"Archivo","Helvetica Neue",Arial,sans-serif; --body:"Inter","Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",Menlo,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1); --spring:cubic-bezier(.34,1.4,.5,1);
+  --ok:#5FD18E; --warn:#E3B64F;
+}
+/* Onyx (dark) is the default theme of the phone */
+.screen{
+  --bg:#0B0B0C; --bg2:#141416; --bg3:#1E1E21; --line:rgba(236,232,224,.11); --line2:rgba(236,232,224,.22);
+  --fg:#ECE8E0; --fg2:#B5B1A9; --fg3:#7A776F; --inv:#0B0B0C;
+  --hero:radial-gradient(120% 70% at 50% 0%,#2A2926 0%,#0B0B0C 62%);
+  --card:linear-gradient(160deg,#22211F,#121213); --glass:rgba(11,11,12,.72); --tabbg:rgba(11,11,12,.9);
+  --img:#1A1A1C;
+}
+.screen.bone{
+  --bg:#F3F0E9; --bg2:#FFFFFF; --bg3:#E8E4DB; --line:rgba(11,11,12,.09); --line2:rgba(11,11,12,.18);
+  --fg:#0B0B0C; --fg2:#4A4944; --fg3:#8A877F; --inv:#F3F0E9;
+  --hero:radial-gradient(120% 70% at 50% 0%,#FFFFFF 0%,#F3F0E9 62%);
+  --card:linear-gradient(160deg,#FFFFFF,#EEEAE2); --glass:rgba(255,255,255,.78); --tabbg:rgba(243,240,233,.92);
+  --img:#E4E0D7;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#050506;color:#ECE8E0;font-family:var(--body)}
+body{min-height:100vh;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ── stage ── */
+.stage{display:grid;grid-template-columns:minmax(0,430px) auto;gap:72px;align-items:center;justify-content:center;padding:40px 32px;max-width:1140px;width:100%;min-height:100vh;margin:0 auto}
+.side .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7A776F}
+.side h1{font-family:var(--disp);font-stretch:75%;font-weight:900;font-size:76px;line-height:.86;letter-spacing:-.02em;margin-top:18px;text-transform:uppercase}
+.side h1 span{color:#6E6B65}
+.side .intro{margin-top:18px;font-size:15px;line-height:1.6;color:#B5B1A9;max-width:390px}
+.controls{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:11px 16px;border:1px solid rgba(236,232,224,.22);border-radius:999px;font-size:13px;font-weight:500;transition:background .3s}
+.pill:hover{background:#1A1A1C}
+.pill i{width:8px;height:8px;border-radius:50%;background:#ECE8E0}
+.pill.playing i{animation:pulse 1s infinite}
+.seg{display:inline-flex;border:1px solid rgba(236,232,224,.22);border-radius:999px;padding:3px}
+.seg button{padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:500;color:#B5B1A9;transition:all .3s var(--ease)}
+.seg button.on{background:#ECE8E0;color:#0B0B0C}
+@keyframes pulse{50%{opacity:.2}}
+.steps{margin-top:24px;border-top:1px solid rgba(236,232,224,.11)}
+.step{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid rgba(236,232,224,.11);opacity:.38;transition:opacity .4s var(--ease);cursor:pointer;text-align:left;width:100%}
+.step.on{opacity:1}
+.step .k{font-family:var(--mono);font-size:11px;color:#7A776F;padding-top:2px}
+.step.on .k{color:#ECE8E0}
+.step b{display:block;font-weight:600;font-size:14px}
+.step span span{display:block;margin-top:2px;font-size:12.5px;color:#B5B1A9;line-height:1.45}
+.admin{margin-top:18px;border:1px solid rgba(236,232,224,.16);border-radius:18px;padding:14px;background:#0F0F11;transition:opacity .4s, transform .4s var(--ease)}
+.admin .hd{display:flex;justify-content:space-between;align-items:center}
+.admin .lbl2{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7A776F}
+.admin .item{display:flex;gap:12px;align-items:center;margin-top:12px}
+.admin .thumb{width:44px;height:56px;border-radius:8px;background:#000 center/cover;position:relative;flex:none}
+.admin .thumb::after{content:"";position:absolute;inset:0;margin:auto;width:0;height:0;border-left:9px solid #fff;border-top:6px solid transparent;border-bottom:6px solid transparent;transform:translateX(2px)}
+.admin .item b{display:block;font-size:13px}
+.admin .item small{display:block;font-size:11.5px;color:#7A776F;margin-top:2px}
+.admin .acts{display:flex;gap:8px;margin-top:12px}
+.admin .acts button{flex:1;height:38px;border-radius:12px;font-size:13px;font-weight:600}
+.admin .ap{background:#ECE8E0;color:#0B0B0C}
+.admin .rj{border:1px solid rgba(236,232,224,.22)}
+.admin .empty{font-size:12.5px;color:#7A776F;margin-top:10px}
+.admin .dim{opacity:.45}
+.credit{margin-top:18px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6E6B65}
+
+/* ── phone ── */
+.phone{width:390px;height:812px;border-radius:56px;background:#000;padding:12px;box-shadow:0 0 0 1.5px #2A2A2E,0 40px 120px rgba(0,0,0,.7),0 0 0 9px #111113;position:relative;flex:none}
+.screen{width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg);color:var(--fg);position:relative;transition:background .5s var(--ease),color .5s}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:80}
+.status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:6px 32px 0;font-size:14px;font-weight:600;z-index:70;color:var(--fg)}
+.status.light{color:#ECE8E0}
+.status .ic{display:flex;gap:6px;align-items:center}
+.status .bat{width:24px;height:11px;border:1.5px solid currentColor;border-radius:3px;position:relative}
+.status .bat::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1px}
+
+.view{position:absolute;inset:0;padding:64px 20px 108px;overflow-y:auto;scrollbar-width:none;opacity:0;transform:translateX(24px);pointer-events:none;transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.view::-webkit-scrollbar{display:none}
+.view.on{opacity:1;transform:none;pointer-events:auto}
+.view.gone{visibility:hidden}
+.view.left{transform:translateX(-24px)}
+
+.wm{font-family:var(--disp);font-stretch:62%;font-weight:900;letter-spacing:.02em;text-transform:uppercase}
+.h{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3)}
+.muted{color:var(--fg2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:54px;border-radius:16px;background:var(--fg);color:var(--inv);font-weight:600;font-size:15px;transition:transform .18s var(--spring),opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line2)}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid var(--line2);font-size:11px;font-weight:500;white-space:nowrap}
+.chip.ok{border-color:rgba(95,209,142,.45);color:var(--ok)}
+.chip.warn{border-color:rgba(227,182,79,.45);color:var(--warn)}
+.chip.sel{background:var(--fg);color:var(--inv);border-color:var(--fg)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ph{background:var(--img) center/cover no-repeat;position:relative}
+.ph.lazy{animation:shimmer 1.4s infinite}
+@keyframes shimmer{50%{opacity:.6}}
+
+/* welcome */
+#v-welcome{padding:0;display:flex;flex-direction:column}
+.wel-img{position:absolute;inset:0;background:#000 url("img/hoodie.jpg") center 20%/cover}
+.wel-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.1) 35%,rgba(11,11,12,.96) 72%)}
+.hero{position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 28px;color:#ECE8E0}
+.hero .wm{font-size:150px;line-height:.78}
+.hero .sub{margin-top:14px;font-size:15px;line-height:1.5;color:#C9C5BD;max-width:290px}
+.auth{position:relative;padding:0 20px 38px;display:grid;gap:10px;background:#0B0B0C}
+.auth .btn{background:#ECE8E0;color:#0B0B0C}
+.auth .btn.ghost{background:transparent;color:#ECE8E0;border-color:rgba(236,232,224,.22)}
+.auth .fine{text-align:center;font-size:11px;color:#7A776F;margin-top:6px}
+
+/* home */
+.top{display:flex;justify-content:space-between;align-items:center}
+.top .wm{font-size:26px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.greet{margin-top:22px}
+.balance{margin-top:16px;padding:20px;border-radius:24px;background:var(--card);border:1px solid var(--line2);position:relative;overflow:hidden}
+.balance::after{content:"";position:absolute;right:-50px;top:-50px;width:190px;height:190px;border-radius:50%;border:1px solid var(--line)}
+.balance .amt{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:56px;line-height:1;margin-top:8px}
+.balance .row{display:flex;gap:18px;margin-top:12px;font-size:12px;color:var(--fg2)}
+.balance .row b{color:var(--fg);font-weight:600}
+.scanbig{margin-top:12px;display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:20px;background:var(--fg);color:var(--inv);width:100%;text-align:left;transition:transform .18s var(--spring)}
+.scanbig:active{transform:scale(.98)}
+.scanbig .ico{width:44px;height:44px;border-radius:12px;background:var(--inv);color:var(--fg);display:flex;align-items:center;justify-content:center}
+.scanbig b{display:block;font-size:15px}
+.scanbig span{font-size:12px;opacity:.7}
+.sec{margin-top:22px;display:flex;justify-content:space-between;align-items:baseline}
+.rail{display:flex;gap:10px;margin:12px -20px 0;padding:0 20px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}
+.rail::-webkit-scrollbar{display:none}
+.rcard{flex:0 0 128px;scroll-snap-align:start;text-align:left}
+.rcard .ph{aspect-ratio:4/5;border-radius:16px;overflow:hidden}
+.rcard .ph .v{position:absolute;top:8px;right:8px}
+.rcard b{display:block;font-size:12px;margin-top:8px;line-height:1.25}
+.rcard small{display:block;font-family:var(--mono);font-size:9px;color:var(--fg3);margin-top:3px}
+.vbadge{width:18px;height:18px;border-radius:50%;background:var(--ok);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.drop{margin-top:12px;border-radius:22px;overflow:hidden;position:relative;height:230px;background:#000 url("img/drop04.jpg") center 25%/cover;color:#ECE8E0}
+.drop::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.85))}
+.drop .in{position:absolute;left:16px;right:16px;bottom:14px;z-index:2}
+.drop .wm{font-size:40px;line-height:.9}
+.drop .cd{display:flex;gap:6px;margin-top:10px}
+.drop .cd div{background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(236,232,224,.18);border-radius:10px;padding:6px 8px;min-width:48px;text-align:center}
+.drop .cd b{display:block;font-family:var(--mono);font-size:15px;font-weight:500}
+.drop .cd small{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#B5B1A9}
+.drop .tagx{position:absolute;top:14px;left:14px;z-index:2;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#ECE8E0;border-color:rgba(236,232,224,.25)}
+
+/* scan */
+#v-scan{padding:0;background:#000;color:#ECE8E0}
+.cam{position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 45%,#3b3833 0%,#16150f 55%,#050505 100%)}
+.fabric{position:absolute;inset:0;opacity:.28;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 5px),repeating-linear-gradient(-45deg,rgba(0,0,0,.25) 0 2px,transparent 2px 5px)}
+.tag{position:absolute;left:50%;top:43%;width:176px;height:228px;transform:translate(-50%,-50%) rotate(-4deg);background:#E9E5DC;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.6);padding:16px 16px 12px;color:#0B0B0C;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:transform .6s var(--ease)}
+.frame.lock ~ .tag{transform:translate(-50%,-50%) rotate(0deg) scale(1.03)}
+.tag .wm{font-size:30px;line-height:1}
+.tag svg{width:118px;height:118px;margin-top:10px}
+.tag .ser{font-family:var(--mono);font-size:8.5px;margin-top:8px;letter-spacing:.06em}
+.frame{position:absolute;left:50%;top:43%;width:236px;height:236px;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.frame i{position:absolute;width:38px;height:38px;border:3px solid #ECE8E0;transition:border-color .3s}
+.frame i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:14px 0 0 0}
+.frame i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 14px 0 0}
+.frame i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 14px}
+.frame i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 14px 0}
+.beam{position:absolute;left:8%;right:8%;height:2px;background:linear-gradient(90deg,transparent,#ECE8E0,transparent);box-shadow:0 0 18px 3px rgba(236,232,224,.5);top:10%;animation:beam 1.6s ease-in-out infinite alternate}
+@keyframes beam{to{top:90%}}
+.frame.lock i{border-color:var(--ok)}
+.frame.lock .beam{display:none}
+.scanhead{position:absolute;top:64px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;z-index:5}
+.x{width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
+.scanfoot{position:absolute;left:20px;right:20px;bottom:40px;text-align:center;z-index:5}
+.scanfoot .state{font-weight:600;font-size:16px}
+.scanfoot .muted{font-size:13px;margin-top:6px;color:#B5B1A9}
+.checks{margin-top:14px;display:grid;gap:7px;text-align:left;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);border:1px solid rgba(236,232,224,.12);border-radius:16px;padding:12px 14px}
+.checks div{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#7A776F;transition:color .3s}
+.checks div.done{color:#ECE8E0}
+.checks div::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;flex:none;transition:all .3s var(--spring)}
+.checks div.done::before{background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%230B0B0C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;border-color:var(--ok);transform:scale(1.1)}
+
+/* verified */
+.ver{text-align:center;padding-top:6px}
+.seal{width:92px;height:92px;margin:8px auto 0;border-radius:50%;border:1.5px solid rgba(95,209,142,.45);display:flex;align-items:center;justify-content:center;position:relative}
+.seal::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:1px dashed rgba(95,209,142,.3);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seal svg path{stroke-dasharray:40;stroke-dashoffset:40}
+.view.on .seal svg path{animation:draw .7s .25s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ver .h{margin-top:16px}
+.prod{margin-top:18px;display:grid;grid-template-columns:100px 1fr;gap:14px;align-items:center;text-align:left}
+.prod .ph{aspect-ratio:4/5;border-radius:14px}
+.prod b{display:block;font-size:15px}
+.kv{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.kv div{background:var(--bg2);padding:11px 13px;text-align:left}
+.kv b{display:block;font-size:13px;margin-top:3px;font-weight:600}
+.kv .mono{font-family:var(--mono);font-size:12px}
+.reward{margin-top:14px;display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-radius:18px;background:rgba(95,209,142,.08);border:1px solid rgba(95,209,142,.32)}
+.reward .amt{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:34px;color:var(--ok)}
+.reward span{font-size:12px;color:var(--fg2);text-align:left}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
+.confetti i{position:absolute;top:-10px;width:6px;height:10px;border-radius:1px;opacity:0;animation:fall 1.6s var(--ease) forwards}
+@keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(520px) rotate(540deg)}}
+
+/* wardrobe */
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.wcard{border-radius:18px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;text-align:left;transition:transform .2s var(--spring)}
+.wcard:active{transform:scale(.97)}
+.wcard .ph{aspect-ratio:4/5}
+.wcard .ph .chip{position:absolute;top:9px;left:9px;background:var(--glass);backdrop-filter:blur(8px);font-size:10px;padding:4px 8px}
+.wcard .meta{padding:10px 12px 12px}
+.wcard b{display:block;font-size:12.5px;line-height:1.25}
+.wcard .s{font-family:var(--mono);font-size:9.5px;color:var(--fg3);margin-top:4px}
+.wcard .bar{margin-top:8px;height:3px;border-radius:2px;background:var(--bg3);overflow:hidden}
+.wcard .bar i{display:block;height:100%;background:var(--fg)}
+.wcard .bt{display:flex;justify-content:space-between;font-size:9.5px;color:var(--fg3);margin-top:4px}
+.wcard.new{animation:pop .7s var(--spring)}
+@keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+.filters{display:flex;gap:6px;margin-top:14px}
+.wsum{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wsum div{border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.wsum b{display:block;font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:22px;margin-top:4px}
+
+/* sheet */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .35s;z-index:85}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:var(--bg);border-radius:30px 30px 0 0;z-index:90;transform:translateY(105%);transition:transform .5s var(--ease);overflow-y:auto;scrollbar-width:none;border-top:1px solid var(--line2)}
+.sheet::-webkit-scrollbar{display:none}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line2);margin:10px auto 0;position:sticky;top:10px;z-index:3}
+.sheet .ph{height:300px;margin-top:-15px}
+.sheet .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,var(--bg))}
+.sheet .body{padding:0 20px 30px;margin-top:-30px;position:relative}
+.cert{margin-top:14px;border:1px solid var(--line2);border-radius:18px;padding:14px;position:relative;overflow:hidden}
+.cert::before{content:"";position:absolute;right:-30px;bottom:-30px;width:120px;height:120px;border-radius:50%;border:1px dashed var(--line2)}
+.cert .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.cert .row:last-child{border:0}
+.cert .row span:first-child{color:var(--fg3)}
+.cert .row span:last-child{font-weight:500}
+.timeline{margin-top:14px}
+.timeline div{display:grid;grid-template-columns:14px 1fr auto;gap:10px;align-items:start;padding:8px 0;font-size:12.5px}
+.timeline div i{width:9px;height:9px;border-radius:50%;background:var(--fg);margin-top:4px;box-shadow:0 0 0 4px var(--bg3)}
+.timeline div small{color:var(--fg3);font-size:11px}
+
+/* earn */
+.field{margin-top:14px;border-radius:16px;background:var(--bg2);border:1px solid var(--line2);padding:12px 14px}
+.field .lbl{display:block}
+.field .val{margin-top:6px;font-family:var(--mono);font-size:12px;word-break:break-all;min-height:18px}
+.caret{display:inline-block;width:1px;height:14px;background:var(--fg);vertical-align:-2px;animation:pulse 1s infinite}
+.detect{margin-top:10px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(6px);transition:all .4s var(--ease)}
+.detect.on{opacity:1;transform:none}
+.plat{width:34px;height:34px;border-radius:10px;background:#000;display:flex;align-items:center;justify-content:center}
+.platrow{display:flex;gap:6px;margin-top:12px}
+.platrow span{flex:1;height:30px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10.5px;color:var(--fg3);transition:all .3s}
+.platrow span.on{border-color:var(--fg);color:var(--fg);background:var(--bg3)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{border-radius:16px;border:1px solid var(--line2);padding:14px;text-align:left;transition:all .25s}
+.opt.sel{border-color:var(--fg);background:var(--bg3)}
+.opt b{display:block;font-size:13px;margin-top:2px}
+.opt .amt{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:26px;margin-top:6px}
+.cap{margin-top:14px;font-size:12px;color:var(--fg2)}
+.cap .track{margin-top:8px;height:6px;border-radius:3px;background:var(--bg3);display:flex;overflow:hidden}
+.cap .track i{display:block;height:100%;transition:width .4s var(--ease)}
+.queue{margin-top:14px;display:none}
+.queue.on{display:block;animation:pop .5s var(--spring)}
+
+/* wallet */
+.wbal{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wbal .card .amt{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:34px;margin-top:6px;transition:color .4s}
+.flash{animation:flash 1s var(--ease)}
+@keyframes flash{30%{color:var(--ok);transform:scale(1.06)}}
+.tx div{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+.tx div span:first-child b{display:block;font-weight:500}
+.tx div span:first-child small{font-size:11px;color:var(--fg3)}
+.tx .p{color:var(--ok);font-weight:600}
+.tx .pend{color:var(--warn);font-weight:600}
+.tx .neg{color:var(--fg2);font-weight:600}
+.redeem{margin-top:12px}
+.slider{margin-top:12px;-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bg3);outline:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--fg);border:5px solid var(--bg2);box-shadow:0 0 0 1px var(--line2)}
+.slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--fg);border:5px solid var(--bg2)}
+.rv{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.rv .amt{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:40px}
+.reserved{display:none;margin-top:12px}
+.reserved.on{display:block;animation:pop .5s var(--spring)}
+.code{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:14px 16px;border-radius:14px;border:1px dashed var(--line2);font-family:var(--mono);font-size:14px;letter-spacing:.08em}
+
+/* tabs */
+.tabs{position:absolute;left:0;right:0;bottom:0;height:92px;padding:10px 18px 26px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:var(--tabbg);backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:60;transition:transform .4s var(--ease)}
+.tabs.hide{transform:translateY(110%)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--fg3);transition:color .2s;position:relative}
+.tab.on{color:var(--fg)}
+.tab.on::after{content:"";position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;background:var(--fg)}
+.tab svg{width:22px;height:22px}
+.tab.scan .c{width:52px;height:52px;border-radius:18px;background:var(--fg);color:var(--inv);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tab.scan::after{display:none}
+
+.toast{position:absolute;left:16px;right:16px;top:58px;z-index:95;padding:12px 14px;border-radius:18px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--line2);font-size:13px;display:flex;align-items:center;gap:10px;transform:translateY(-180px);opacity:0;transition:transform .55s var(--spring),opacity .3s;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.toast.on{transform:none;opacity:1}
+.toast .ti{width:30px;height:30px;border-radius:9px;background:var(--fg);color:var(--inv);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-stretch:62%;font-weight:900;font-size:11px;flex:none}
+.toast b{display:block;font-size:12.5px}
+.toast small{display:block;font-size:12px;color:var(--fg2)}
+
+/* duplicate-tag state */
+.checks div.fail{color:#FF7A6B}
+.checks div.fail::before{background:#FF7A6B url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 5l6 6M11 5l-6 6' fill='none' stroke='%230B0B0C' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") center/11px no-repeat;border-color:#FF7A6B}
+.frame.bad i{border-color:#FF7A6B}
+.frame.bad .beam{display:none}
+.alt{margin-top:12px;font-size:12px;color:#B5B1A9;text-decoration:underline;text-underline-offset:3px}
+
+/* admin extras */
+.admin .blk{margin-top:14px;padding-top:12px;border-top:1px solid rgba(236,232,224,.1)}
+.admin .rowx{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin .rowx b{font-size:13px}
+.admin .rowx small{display:block;font-size:11.5px;color:#7A776F;margin-top:2px}
+.admin .sm{height:32px;padding:0 14px;border-radius:10px;background:#ECE8E0;color:#0B0B0C;font-size:12.5px;font-weight:600;flex:none}
+.admin .prog{margin-top:10px;height:4px;border-radius:2px;background:#1E1E21;overflow:hidden;display:none}
+.admin .prog i{display:block;height:100%;width:0;background:#5FD18E;transition:width .2s linear}
+.admin .rules{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.admin .rules div{border:1px solid rgba(236,232,224,.12);border-radius:10px;padding:7px 8px}
+.admin .rules small{display:block;font-size:9.5px;color:#7A776F;letter-spacing:.04em}
+.admin .rules b{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:18px}
+
+/* web portal mode */
+.browser{display:none}
+.stage.webmode{grid-template-columns:330px minmax(0,1fr);gap:44px;max-width:1440px}
+.stage.webmode .side h1{font-size:60px}
+.phone.web{width:100%;max-width:980px;height:640px;border-radius:18px;padding:0;box-shadow:0 0 0 1px #2A2A2E,0 40px 120px rgba(0,0,0,.7)}
+.phone.web .screen{border-radius:18px}
+.phone.web .notch,.phone.web .status{display:none}
+.phone.web .browser{display:flex;position:absolute;top:0;left:0;right:0;height:44px;align-items:center;gap:14px;padding:0 16px;background:#161618;border-bottom:1px solid rgba(236,232,224,.08);z-index:75}
+.browser .dots{display:flex;gap:7px}
+.browser .dots i{width:11px;height:11px;border-radius:50%;background:#3A3A3E}
+.browser .url{flex:1;max-width:460px;margin:0 auto;height:28px;border-radius:8px;background:#0B0B0C;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#B5B1A9;font-family:var(--body)}
+.screen.web .view{padding:116px max(36px,calc(50% - 380px)) 40px}
+.screen.web #v-welcome,.screen.web #v-scan{padding:44px 0 0}
+.screen.web .hero .wm{font-size:190px}
+.screen.web .auth{flex-direction:row;display:flex;justify-content:center;gap:12px;padding:24px 40px 36px}
+.screen.web .auth .btn{max-width:300px}
+.screen.web .auth .fine{display:none}
+.screen.web .tabs{top:44px;bottom:auto;height:56px;padding:0 max(24px,calc(50% - 380px));display:flex;align-items:center;gap:26px;border-top:0;border-bottom:1px solid var(--line)}
+.screen.web .tabs::before{content:"LAID";margin-right:auto;font-family:var(--disp);font-stretch:62%;font-weight:900;font-size:24px;letter-spacing:.02em}
+.screen.web .tabs.hide{transform:translateY(-230%)}
+.screen.web .tab{flex-direction:row;gap:8px;font-size:13px;font-weight:500}
+.screen.web .tab svg{width:18px;height:18px}
+.screen.web .tab.on::after{bottom:-19px;width:100%;height:2px;border-radius:1px}
+.screen.web .tab.scan .c{width:auto;height:34px;padding:0 14px;border-radius:10px;margin:0;gap:8px;font-size:13px;font-weight:600}
+.screen.web .tab.scan .c::after{content:"Register"}
+.screen.web .tab.scan .c svg{width:16px;height:16px}
+.screen.web .wgrid{grid-template-columns:repeat(4,1fr)}
+.screen.web #v-home .top{display:none}
+.screen.web #v-home .greet{margin-top:0}
+.screen.web .rail{margin:12px 0 0;padding:0}
+.screen.web .rcard{flex:1 1 0}
+.screen.web .drop{height:280px}
+.screen.web .wbal{grid-template-columns:repeat(2,1fr)}
+.screen.web .sheet{left:50%;right:auto;width:520px;bottom:24px;border-radius:24px;max-height:82%;transform:translate(-50%,110%);border:1px solid var(--line2)}
+.screen.web .sheet.on{transform:translate(-50%,0)}
+.screen.web .toast{left:auto;right:24px;top:116px;width:340px}
+.screen.web .scanfoot{bottom:28px;max-width:420px;left:50%;transform:translateX(-50%);width:100%}
+
+@media (max-width:960px){
+  #device{display:none}
+  .stage{grid-template-columns:1fr;gap:28px;padding:20px 16px;justify-items:center}
+  .side{max-width:390px;width:100%}
+  .side h1{font-size:54px}
+  .steps,.credit,.admin{display:none}
+}
+@media (max-width:430px){
+  body{align-items:flex-start}
+  .stage{padding:0}
+  .side{display:none}
+  .phone{width:100vw;height:100svh;border-radius:0;padding:0;box-shadow:none}
+  .screen{border-radius:0}
+  .notch{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <aside class="side">
+    <div class="eyebrow">Concept demo · prepared for LAID</div>
+    <h1>LAID<br><span>Members</span></h1>
+    <p class="intro">A first look at the member app. Tap through it on the phone, or press play for a guided tour. Sample data, real flows.</p>
+    <div class="controls">
+      <button class="pill" id="tour"><i></i><span>Play guided tour</span></button>
+      <div class="seg" id="theme"><button class="on" data-t="onyx">Onyx</button><button data-t="bone">Bone</button></div>
+      <div class="seg" id="device"><button class="on" data-d="app">iOS · Android</button><button data-d="web">Web portal</button></div>
+    </div>
+    <div class="steps" id="steps">
+      <button class="step" data-step="welcome"><span class="k">01</span><span><b>Sign in</b><span>Apple and Google sign-in, one tap.</span></span></button>
+      <button class="step" data-step="scan"><span class="k">02</span><span><b>Scan the tag</b><span>Signed QR, checked against the LAID registry.</span></span></button>
+      <button class="step" data-step="verified"><span class="k">03</span><span><b>Authentic, and yours</b><span>One garment, one owner. Credit issued instantly.</span></span></button>
+      <button class="step" data-step="wardrobe"><span class="k">04</span><span><b>Digital wardrobe</b><span>Tap any piece for its certificate of authenticity.</span></span></button>
+      <button class="step" data-step="earn"><span class="k">05</span><span><b>Earn with video</b><span>Paste a TikTok, Reel or Short. Sent for review.</span></span></button>
+      <button class="step" data-step="wallet"><span class="k">06</span><span><b>Wallet and redemption</b><span>Reserve credit, applied at Shopify checkout.</span></span></button>
+    </div>
+    <div class="admin" id="admin">
+      <div class="hd"><span class="lbl2">LAID admin dashboard</span><span class="lbl2" id="admCount">0 waiting</span></div>
+      <div id="admBody" class="dim"><div class="empty">Submit a video in the app to see it arrive here.</div></div>
+      <div class="blk">
+        <div class="rowx"><div><b>QR batch · Drop 04</b><small id="batchTxt">5,000 signed serials, print-ready</small></div><button class="sm" id="genBatch">Generate</button></div>
+        <div class="prog" id="prog"><i></i></div>
+      </div>
+      <div class="blk">
+        <div class="rowx"><div><b>Reward rules</b><small>Changed here, live in the app</small></div><span class="lbl2" style="color:#5FD18E">Live</span></div>
+        <div class="rules"><div><small>Register</small><b>$2</b></div><div><small>Unboxing</small><b>$3</b></div><div><small>Wearing</small><b>$5</b></div><div><small>Cap</small><b>$10</b></div></div>
+      </div>
+    </div>
+    <div class="credit">Concept by Drifted Marketing · photos via Unsplash</div>
+  </aside>
+
+  <div class="phone">
+    <div class="screen" id="screen">
+      <div class="browser"><span class="dots"><i></i><i></i><i></i></span><span class="url"><svg width="11" height="12" viewBox="0 0 11 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="5" width="9" height="6" rx="1.5"/><path d="M3 5V3.5a2.5 2.5 0 0 1 5 0V5"/></svg><span id="urlbar">members.yourdomain.com</span></span><span style="width:47px"></span></div>
+      <div class="notch"></div>
+      <div class="status light" id="status"><span>9:41</span><span class="ic">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <span class="bat"></span></span></div>
+      <div class="toast" id="toast"><span class="ti">LAID</span><span><b id="toastT"></b><small id="toastS"></small></span></div>
+
+      <!-- WELCOME -->
+      <section class="view on" id="v-welcome">
+        <div class="wel-img"></div>
+        <div class="hero">
+          <div class="lbl" style="color:#B5B1A9">Members</div>
+          <div class="wm">LAID</div>
+          <p class="sub">Every LAID garment, verified and registered to you. Earn credit for wearing it.</p>
+        </div>
+        <div class="auth">
+          <button class="btn" data-go="home"><svg width="16" height="18" viewBox="0 0 16 19" fill="currentColor"><path d="M13.2 10c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8C3.7 4.7 2.2 5.6 1.4 7c-1.7 2.9-.4 7.2 1.2 9.5.8 1.1 1.7 2.4 2.9 2.4 1.2 0 1.6-.8 3-.8s1.8.8 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.4-1-2.4-3.9zM10.9 3c.6-.8 1.1-1.8 1-2.9-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.8 1 .1 2.1-.5 2.7-1.3z"/></svg>Continue with Apple</button>
+          <button class="btn ghost" data-go="home"><svg width="17" height="17" viewBox="0 0 18 18"><path fill="#ECE8E0" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8c-.2 1.1-.8 2-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#B5B1A9" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.4 0-4.4-1.6-5.1-3.7H.9v2.3C2.4 16 5.5 18 9 18z"/><path fill="#7A776F" d="M3.9 10.8c-.2-.5-.3-1.1-.3-1.8s.1-1.2.3-1.8V4.9H.9C.3 6.1 0 7.5 0 9s.3 2.9.9 4.1l3-2.3z"/><path fill="#ECE8E0" d="M9 3.6c1.3 0 2.5.5 3.5 1.4l2.6-2.6C13.5.9 11.4 0 9 0 5.5 0 2.4 2 .9 4.9l3 2.3C4.6 5.1 6.6 3.6 9 3.6z"/></svg>Continue with Google</button>
+          <div class="fine">Concept demo · sample data</div>
+        </div>
+      </section>
+
+      <!-- HOME -->
+      <section class="view" id="v-home">
+        <div class="top"><span class="wm">LAID</span><span class="avatar">JR</span></div>
+        <div class="greet"><div class="lbl">Member since 2026</div><div class="h" style="margin-top:8px">Morning,<br>Jordan.</div></div>
+        <div class="balance">
+          <div class="lbl">Available credit</div>
+          <div class="amt" id="homeBal">$10.00</div>
+          <div class="row"><span>Pending <b id="homePend">$3.00</b></span><span>Garments <b id="homeCount">3</b></span></div>
+        </div>
+        <button class="scanbig" data-go="scan"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg></span><span><b>Register a garment</b><span>Scan the tag inside your new piece · +$2</span></span></button>
+        <div class="sec"><span class="lbl">Your wardrobe</span><button class="lbl" data-go="wardrobe" style="color:var(--fg)">View all →</button></div>
+        <div class="rail" id="homeRail"></div>
+        <div class="sec"><span class="lbl">Next drop</span><span class="lbl">Members first</span></div>
+        <div class="drop"><span class="chip tagx">Drop 04 · Stone</span><div class="in"><div class="wm">Heavyweight<br>Hoodie</div><div class="cd" id="cd"></div></div></div>
+      </section>
+
+      <!-- SCAN -->
+      <section class="view" id="v-scan">
+        <div class="cam"></div><div class="fabric"></div>
+        <div class="frame" id="frame"><i></i><i></i><i></i><i></i><div class="beam"></div></div>
+        <div class="tag" id="tagEl"><span class="wm">LAID</span><svg id="qr" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg><span class="ser">LD-03-0004821</span></div>
+        <div class="scanhead"><button class="x" data-go="home" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" stroke="#ECE8E0" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg></button><span class="lbl" style="color:#ECE8E0">Register garment</span><span style="width:38px"></span></div>
+        <div class="scanfoot">
+          <div class="state" id="scanState">Point at the tag inside your garment</div>
+          <div class="muted" id="scanSub">Tap the tag to scan</div>
+          <div class="checks" id="checks">
+            <div>Signature valid</div>
+            <div>Serial found in LAID registry</div>
+            <div>Not registered to another member</div>
+          </div>
+          <button class="alt" id="altScan">Try a tag already owned by someone else</button>
+        </div>
+      </section>
+
+      <!-- VERIFIED -->
+      <section class="view" id="v-verified">
+        <div class="confetti" id="confetti"></div>
+        <div class="ver">
+          <span class="chip ok"><span class="dot"></span>Authentic LAID garment</span>
+          <div class="seal"><svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M12 23l7 7 14-15" stroke="#5FD18E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="h">Registered<br>to you.</div>
+        </div>
+        <div class="prod">
+          <div class="ph" data-img="hoodie"></div>
+          <div><div class="lbl">Drop 03 · Onyx</div><b style="margin-top:6px">Performance Hoodie</b><div class="muted" style="font-size:12px;margin-top:4px">Heavyweight loopback fleece</div></div>
+        </div>
+        <div class="kv">
+          <div><span class="lbl">Serial</span><b class="mono">LD-03-0004821</b></div>
+          <div><span class="lbl">Size</span><b>M</b></div>
+          <div><span class="lbl">Registered</span><b class="regDate">5 Nov 2026</b></div>
+          <div><span class="lbl">Owner</span><b>Jordan R.</b></div>
+        </div>
+        <div class="reward"><span><b style="color:var(--fg);font-size:14px">Registration reward</b><br>Added to your wallet</span><span class="amt" id="rewardAmt">+$0.00</span></div>
+        <button class="btn" style="margin-top:14px" data-go="wardrobe">See it in your wardrobe</button>
+      </section>
+
+      <!-- WARDROBE -->
+      <section class="view" id="v-wardrobe">
+        <div class="top"><span class="h" style="font-size:28px">Wardrobe</span><span class="chip" id="wCount">3 pieces</span></div>
+        <div class="wsum"><div><span class="lbl">Pieces</span><b id="sumP">3</b></div><div><span class="lbl">Earned</span><b id="sumE">$17</b></div><div><span class="lbl">Drops</span><b id="sumD">2</b></div></div>
+        <div class="filters"><span class="chip sel">All</span><span class="chip">Drop 03</span><span class="chip">Drop 02</span><span class="chip">Drop 01</span></div>
+        <div class="wgrid" id="wgrid"></div>
+      </section>
+
+      <!-- EARN -->
+      <section class="view" id="v-earn">
+        <span class="h" style="font-size:28px">Earn credit</span>
+        <p class="muted" style="font-size:13px;margin-top:8px;line-height:1.5">Post a video wearing LAID. Paste the link. We review it, you earn.</p>
+        <div class="platrow" id="plats"><span data-p="tt">TikTok</span><span data-p="ig">Reels</span><span data-p="yt">Shorts</span><span data-p="fb">Facebook</span></div>
+        <div class="field"><span class="lbl">Video link</span><div class="val" id="url"><span class="caret"></span></div></div>
+        <div class="detect" id="detect"><span class="plat"><svg width="16" height="18" viewBox="0 0 16 18" fill="#ECE8E0"><path d="M11.8 0h-2.9v12.2a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V6.7a5.5 5.5 0 1 0 4.7 5.5V6a7 7 0 0 0 4.2 1.4V4.5A4.3 4.3 0 0 1 11.8 0z"/></svg></span><div><b style="font-size:13px">TikTok video detected</b><div class="muted" style="font-size:11.5px">Public · plays in your profile · not used before</div></div></div>
+        <div class="lbl" style="margin-top:16px">Featuring</div>
+        <div class="card" style="margin-top:8px;display:flex;gap:12px;align-items:center;padding:10px"><div class="ph" data-img="hoodie" style="width:46px;height:56px;border-radius:10px;flex:none"></div><div style="flex:1"><b style="font-size:13px">Performance Hoodie · Onyx</b><div style="font-family:var(--mono);font-size:10px;color:var(--fg3);margin-top:3px">LD-03-0004821</div></div><span class="chip">M</span></div>
+        <div class="opts">
+          <button class="opt" data-opt="3"><span class="lbl">Unboxing</span><b>First look</b><div class="amt">$3</div></button>
+          <button class="opt sel" data-opt="5"><span class="lbl">Wearing</span><b>In the wild</b><div class="amt">$5</div></button>
+        </div>
+        <div class="cap">Garment reward cap · <span id="capTxt"></span><div class="track"><i style="width:20%;background:var(--fg)"></i><i id="capAdd" style="width:50%;background:var(--line2)"></i></div></div>
+        <button class="btn" style="margin-top:16px" id="submitVid">Submit for review</button>
+        <div class="queue" id="queue"><div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:13px" id="qT">In review</b><div class="muted" style="font-size:12px;margin-top:3px" id="qS">Usually approved within 24 hours</div></div><span class="chip warn" id="qChip"><span class="dot"></span>+$5 pending</span></div></div>
+      </section>
+
+      <!-- WALLET -->
+      <section class="view" id="v-wallet">
+        <span class="h" style="font-size:28px">Wallet</span>
+        <div class="wbal">
+          <div class="card"><span class="lbl">Available</span><div class="amt" id="wAvail">$10.00</div></div>
+          <div class="card"><span class="lbl">Pending</span><div class="amt" style="color:var(--warn)" id="wPend">$3.00</div></div>
+        </div>
+        <div class="redeem card">
+          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px">Redeem at checkout</b><span class="lbl">Shopify</span></div>
+          <input type="range" class="slider" id="slider" min="0" max="10" step="1" value="10" aria-label="Credits to redeem">
+          <div class="rv"><span class="amt" id="rAmt">$10</span><span class="muted" style="font-size:12px">off your next order</span></div>
+          <button class="btn" style="margin-top:12px" id="reserve">Reserve credit</button>
+          <div class="reserved" id="reserved">
+            <div class="code"><span>LAID-7KQ2-M9</span><span class="chip ok"><span class="dot"></span>Reserved</span></div>
+            <div class="muted" style="font-size:12px;margin-top:8px;line-height:1.5">Applied automatically at LAID checkout. Held for <b id="timer" style="color:var(--fg)">30:00</b>, released if the order isn't completed.</div>
+          </div>
+        </div>
+        <div class="lbl" style="margin-top:20px">History</div>
+        <div class="tx" id="tx"></div>
+      </section>
+
+      <div class="scrim" id="scrim"></div>
+      <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+
+      <nav class="tabs hide" id="tabs">
+        <button class="tab" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5V20h-5v-6H9v6H4z"/></svg>Home</button>
+        <button class="tab" data-go="wardrobe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3c0 2-2 3-4 3S8 5 8 3z"/></svg>Wardrobe</button>
+        <button class="tab scan" data-go="scan"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg></span></button>
+        <button class="tab" data-go="earn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Earn</button>
+        <button class="tab" data-go="wallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h2"/></svg>Wallet</button>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const U = n => `img/${n}.jpg`;
+  const IMG = {
+    hoodie: [U('hoodie'),'center 30%'],
+    teeBone:[U('tee-bone'),'center 45%'],
+    teeOnyx:[U('tee-onyx'),'50% center'],
+    cap:    [U('cap'),'center 55%'],
+  };
+  const paint = root => (root||document).querySelectorAll('[data-img]').forEach(el=>{ const [u,pos]=IMG[el.dataset.img]; el.style.backgroundImage=`url("${u}")`; el.style.backgroundPosition=pos; });
+  const ward = [
+    {img:'teeBone',name:'Core Tee · Bone',drop:'Drop 01',ser:'LD-01-0011902',size:'L',used:10,reg:'12 Jun 2026',fabric:'Midweight combed cotton'},
+    {img:'teeOnyx',name:'Core Tee · Onyx',drop:'Drop 02',ser:'LD-02-0007315',size:'M',used:5,reg:'9 Aug 2026',fabric:'Midweight combed cotton'},
+    {img:'cap',name:'Field Cap · Bone',drop:'Drop 02',ser:'LD-02-0019044',size:'OS',used:2,reg:'2 Sep 2026',fabric:'Brushed cotton twill'},
+  ];
+  const hoodie = {img:'hoodie',name:'Performance Hoodie · Onyx',drop:'Drop 03',ser:'LD-03-0004821',size:'M',used:2,reg:'',fabric:'Heavyweight loopback fleece',isNew:true};
+  let registered=false, avail=10, pend=3, current='welcome', submitted=false, approved=false, reward=5;
+
+  // QR
+  (function(){ const n=29; let seed=4821, d=''; const r=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+    const F=(x,y)=>[[0,0],[n-7,0],[0,n-7]].some(([a,b])=>x>=a&&x<a+7&&y>=b&&y<b+7);
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){ if(F(x,y)){const a=x<7?0:n-7,b=y<7?0:n-7,lx=x-a,ly=y-b; if(lx===0||lx===6||ly===0||ly===6||(lx>=2&&lx<=4&&ly>=2&&ly<=4)) d+=`M${x} ${y}h1v1h-1z`;}
+      else if(!(x<8&&y<8)&&!(x>n-9&&y<8)&&!(x<8&&y>n-9)&&r()>.52) d+=`M${x} ${y}h1v1h-1z`; }
+    $('#qr').innerHTML=`<path d="${d}" fill="#0B0B0C"/>`; })();
+
+  const money=v=>'$'+v.toFixed(2);
+  const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  hoodie.reg=today; $$('.regDate').forEach(e=>e.textContent=today);
+  function countUp(el,to,pre='+$',ms=900){const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-p,3);el.textContent=pre+(to*e).toFixed(2);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f);}
+  function toast(t,s){ $('#toastT').textContent=t; $('#toastS').textContent=s||''; $('#toast').classList.add('on'); clearTimeout(toast.k); toast.k=setTimeout(()=>$('#toast').classList.remove('on'),3000); }
+  const list=()=>registered?[hoodie,...ward]:ward;
+  const check='<svg width="9" height="9" viewBox="0 0 16 16"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="#0B0B0C" stroke-width="2.8" stroke-linecap="round"/></svg>';
+
+  function renderHome(){
+    $('#homeRail').innerHTML=list().map((w,i)=>`<button class="rcard ${w.isNew?'new':''}" data-open="${i}"><div class="ph" data-img="${w.img}"><span class="v vbadge">${check}</span></div><b>${w.name.split(' · ')[0]}</b><small>${w.drop} · ${w.name.split(' · ')[1]}</small></button>`).join('');
+    paint($('#homeRail'));
+    $('#homeBal').textContent=money(avail); $('#homePend').textContent=money(pend); $('#homeCount').textContent=list().length;
+  }
+  function renderWardrobe(){
+    const L=list(); $('#wCount').textContent=L.length+' pieces';
+    $('#sumP').textContent=L.length; $('#sumE').textContent='$'+L.reduce((a,w)=>a+w.used,0); $('#sumD').textContent=new Set(L.map(w=>w.drop)).size;
+    $('#wgrid').innerHTML=L.map((w,i)=>`<button class="wcard ${w.isNew?'new':''}" data-open="${i}"><div class="ph" data-img="${w.img}"><span class="chip ok"><span class="dot"></span>Authentic</span></div><div class="meta"><b>${w.name}</b><div class="s">${w.ser} · ${w.size}</div><div class="bar"><i style="width:${w.used*10}%"></i></div><div class="bt"><span>${w.drop}</span><span>$${w.used} of $10</span></div></div></button>`).join('');
+    paint($('#wgrid'));
+  }
+  function openSheet(i){
+    const w=list()[i]; if(!w) return;
+    $('#sheetBody').innerHTML=`<div class="ph" data-img="${w.img}"></div><div class="body">
+      <span class="chip ok"><span class="dot"></span>Verified authentic</span>
+      <div class="h" style="margin-top:10px;font-size:28px">${w.name.split(' · ')[0]}</div>
+      <div class="muted" style="font-size:13px;margin-top:4px">${w.name.split(' · ')[1]} · ${w.fabric}</div>
+      <div class="cert"><div class="lbl" style="margin-bottom:6px">Certificate of authenticity</div>
+        <div class="row"><span>Serial</span><span style="font-family:var(--mono);font-size:12px">${w.ser}</span></div>
+        <div class="row"><span>Drop</span><span>${w.drop}</span></div>
+        <div class="row"><span>Size</span><span>${w.size}</span></div>
+        <div class="row"><span>Owner</span><span>Jordan R.</span></div>
+        <div class="row"><span>Registered</span><span>${w.reg}</span></div></div>
+      <div class="cap" style="margin-top:16px">Credit earned on this piece · $${w.used} of $10<div class="track"><i style="width:${w.used*10}%;background:var(--fg)"></i></div></div>
+      <div class="timeline"><div><i></i><span>Registered to Jordan R.<br><small>Ownership locked to one member</small></span><small>${w.reg}</small></div></div>
+      <button class="btn" style="margin-top:16px" data-go="earn">Earn with this piece</button></div>`;
+    paint($('#sheetBody')); $('#sheet').classList.add('on'); $('#scrim').classList.add('on'); $('#sheet').scrollTop=0;
+  }
+  function closeSheet(){ $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); }
+  $('#scrim').addEventListener('click',closeSheet);
+
+  function renderWallet(){
+    $('#wAvail').textContent=money(avail); $('#wPend').textContent=money(pend);
+    const s=$('#slider'); s.max=Math.floor(avail); if(+s.value>avail) s.value=Math.floor(avail); $('#rAmt').textContent='$'+s.value;
+    const rows=[];
+    if(submitted) rows.push(['Wearing video · TikTok','Performance Hoodie',`+$${reward}.00`,approved?'p':'pend']);
+    if(registered) rows.push(['Garment registered','Performance Hoodie','+$2.00','p']);
+    rows.push(['Unboxing video · Reels','Field Cap','+$3.00','pend'],['Garment registered','Field Cap','+$2.00','p'],['Redeemed at checkout','Order #1042','−$7.00','neg'],['Unboxing video · Reels','Core Tee · Onyx','+$3.00','p'],['Garment registered','Core Tee · Onyx','+$2.00','p'],['Wearing video · YouTube Shorts','Core Tee · Bone','+$5.00','p'],['Unboxing video · TikTok','Core Tee · Bone','+$3.00','p'],['Garment registered','Core Tee · Bone','+$2.00','p']);
+    $('#tx').innerHTML=rows.map(r=>`<div><span><b>${r[0]}</b><small>${r[1]}</small></span><span class="${r[3]}">${r[2]}${r[3]==='pend'?' · pending':''}</span></div>`).join('');
+  }
+
+  // countdown to next drop (rolling 2d 14h from load)
+  const dropAt=Date.now()+((2*24+14)*3600+22*60)*1000;
+  function tick(){ let s=Math.max(0,Math.floor((dropAt-Date.now())/1000)); const d=Math.floor(s/86400); s%=86400; const h=Math.floor(s/3600); s%=3600; const m=Math.floor(s/60); s%=60;
+    $('#cd').innerHTML=[[d,'Days'],[h,'Hrs'],[m,'Min'],[s,'Sec']].map(([v,l])=>`<div><b>${String(v).padStart(2,'0')}</b><small>${l}</small></div>`).join(''); }
+  tick(); setInterval(tick,1000);
+
+  // navigation
+  const order=['welcome','home','scan','verified','wardrobe','earn','wallet'];
+  function go(id){
+    closeSheet();
+    if(id===current) return;
+    const prev=$('#v-'+current), next=$('#v-'+id), fwd=order.indexOf(id)>order.indexOf(current);
+    prev.classList.remove('on'); prev.classList.toggle('left',fwd);
+    next.classList.remove('left','gone'); next.classList.add('on'); current=id;
+    clearTimeout(prev._g); prev._g=setTimeout(()=>{ if(!prev.classList.contains('on')) prev.classList.add('gone'); },480);
+    $('#tabs').classList.toggle('hide',['welcome','scan','verified'].includes(id));
+    $('#status').classList.toggle('light',['welcome','scan'].includes(id));
+    $$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.go===id));
+    const sm={welcome:'welcome',home:'welcome',scan:'scan',verified:'verified',wardrobe:'wardrobe',earn:'earn',wallet:'wallet'};
+    $$('.step').forEach(s=>s.classList.toggle('on',s.dataset.step===sm[id]));
+    next.scrollTop=0;
+    $('#urlbar').textContent='members.yourdomain.com'+({welcome:'/sign-in',home:'',scan:'/register',verified:'/register',wardrobe:'/wardrobe',earn:'/earn',wallet:'/wallet'}[id]);
+    if(id==='home') renderHome(); if(id==='wardrobe') renderWardrobe(); if(id==='wallet') renderWallet();
+    if(id==='scan') resetScan(); if(id==='earn') startEarn();
+  }
+  document.addEventListener('click',e=>{
+    const o=e.target.closest('[data-open]'); if(o){ openSheet(+o.dataset.open); return; }
+    const b=e.target.closest('[data-go]'); if(b){ if(e.isTrusted) stopTour(); go(b.dataset.go); }
+  });
+
+  // scan
+  let scanning=false;
+  function resetScan(){ scanning=false; $('#frame').classList.remove('lock','bad'); $$('#checks div').forEach(d=>d.classList.remove('done','fail')); $('#tagEl .ser').textContent='LD-03-0004821'; $('#scanState').textContent='Point at the tag inside your garment'; $('#scanSub').textContent='Tap the tag to scan'; }
+  function runScan(){
+    if(scanning) return; scanning=true;
+    if(registered){ $('#scanState').textContent='Already registered to you'; $('#scanSub').textContent='Each garment can only be registered once'; $('#frame').classList.add('lock'); setTimeout(()=>go('wardrobe'),1700); return; }
+    $('#scanState').textContent='Verifying…'; $('#scanSub').textContent='Checking the LAID registry'; $('#frame').classList.add('lock');
+    $$('#checks div').forEach((d,i)=>setTimeout(()=>d.classList.add('done'),450+i*420));
+    setTimeout(()=>{ registered=true; avail+=2; go('verified'); countUp($('#rewardAmt'),2); burst(); },1950);
+  }
+  $('#v-scan').addEventListener('click',e=>{ if(!e.target.closest('[data-go]')&&!e.target.closest('.alt')) runScan(); });
+  $('#altScan').addEventListener('click',e=>{
+    e.stopPropagation(); if(scanning) return; scanning=true;
+    $('#tagEl .ser').textContent='LD-02-0003377';
+    $('#scanState').textContent='Verifying…'; $('#scanSub').textContent='Checking the LAID registry';
+    const c=$$('#checks div');
+    setTimeout(()=>c[0].classList.add('done'),450); setTimeout(()=>c[1].classList.add('done'),870);
+    setTimeout(()=>{ c[2].classList.add('fail'); $('#frame').classList.add('bad');
+      $('#scanState').textContent='Already registered to another member'; $('#scanSub').textContent='No duplicate registration, no reward. Ownership moves only when the owner transfers it.';
+      toast('Registration blocked','LD-02-0003377 belongs to another member'); setTimeout(()=>{ scanning=false; },600); },1300);
+  });
+  function burst(){ const c=$('#confetti'); c.innerHTML=''; const cols=['#5FD18E','#ECE8E0','#B5B1A9','#E3B64F'];
+    for(let i=0;i<34;i++){ const s=document.createElement('i'); s.style.left=(Math.random()*100)+'%'; s.style.background=cols[i%4]; s.style.animationDelay=(Math.random()*.35)+'s'; s.style.transform=`rotate(${Math.random()*180}deg)`; c.appendChild(s);} }
+
+  // earn
+  const URL='https://www.tiktok.com/@jordanr/video/7431190288154'; let typeT;
+  function setCap(){ $('#capAdd').style.width=(reward*10)+'%'; $('#capTxt').textContent=submitted?`$2 of $10 used · +$${reward} ${approved?'approved':'pending'}`:`$2 of $10 used · +$${reward} if approved`; }
+  function startEarn(){
+    clearInterval(typeT); setCap(); $$('#plats span').forEach(p=>p.classList.remove('on'));
+    if(submitted){ $('#url').textContent=URL; $('#detect').classList.add('on'); $('#plats [data-p=tt]').classList.add('on'); return; }
+    $('#detect').classList.remove('on'); $('#url').innerHTML='<span class="caret"></span>';
+    let i=0; setTimeout(()=>{ typeT=setInterval(()=>{ i+=2; $('#url').innerHTML=URL.slice(0,i)+'<span class="caret"></span>'; if(i>=URL.length){clearInterval(typeT); $('#url').textContent=URL; $('#detect').classList.add('on'); $('#plats [data-p=tt]').classList.add('on');} },26); },350);
+  }
+  $$('.opt').forEach(o=>o.addEventListener('click',()=>{ if(submitted) return; $$('.opt').forEach(x=>x.classList.remove('sel')); o.classList.add('sel'); reward=+o.dataset.opt; setCap(); }));
+  $('#submitVid').addEventListener('click',()=>{
+    if(submitted){ toast('Already submitted','One video can only earn once'); return; }
+    submitted=true; pend+=reward; $('#queue').classList.add('on'); $('#qChip').innerHTML=`<span class="dot"></span>+$${reward} pending`;
+    $('#submitVid').textContent='Submitted'; $('#submitVid').style.opacity=.5; setCap();
+    toast('Sent for review',`+$${reward} pending · LAID team notified`); renderAdmin();
+  });
+
+  // admin panel (desktop side)
+  function renderAdmin(){
+    const a=$('#admBody');
+    if(!submitted||approved){ a.classList.toggle('dim',!approved); $('#admCount').textContent='0 waiting';
+      $('#admBody').innerHTML=approved?'<div class="empty">Approved. The member was paid instantly.</div>':'<div class="empty">Submit a video in the app to see it arrive here.</div>'; return; }
+    a.classList.remove('dim'); $('#admCount').textContent='1 waiting';
+    $('#admBody').innerHTML=`<div class="item"><span class="thumb" style="background-image:url('${IMG.hoodie[0]}')"></span><div><b>Jordan R. · TikTok · Wearing</b><small>Performance Hoodie · LD-03-0004821 · +$${reward}</small></div></div><div class="acts"><button class="ap" id="approve">Approve</button><button class="rj" id="reject">Reject</button></div>`;
+    $('#approve').onclick=approve; $('#reject').onclick=()=>toast('Video rejected','Member notified with the reason');
+  }
+  function approve(){
+    if(approved||!submitted) return; approved=true; pend-=reward; avail+=reward; hoodie.used=2+reward; renderAdmin();
+    $('#qT').textContent='Approved'; $('#qS').textContent='Credit added to your wallet'; $('#qChip').className='chip ok'; $('#qChip').innerHTML=`<span class="dot"></span>+$${reward} paid`; setCap();
+    toast('Video approved',`+$${reward}.00 is now available in your wallet`);
+    if(current==='wallet'){ renderWallet(); $('#wAvail').classList.remove('flash'); void $('#wAvail').offsetWidth; $('#wAvail').classList.add('flash'); }
+    if(current==='home') renderHome(); if(current==='wardrobe') renderWardrobe();
+  }
+
+  // wallet
+  $('#slider').addEventListener('input',e=>$('#rAmt').textContent='$'+e.target.value);
+  let timerI;
+  $('#reserve').addEventListener('click',()=>{
+    const v=+$('#slider').value; if(!v){ toast('Choose an amount',''); return; }
+    $('#reserved').classList.add('on'); $('#reserve').textContent=`$${v} reserved`; $('#reserve').style.opacity=.5;
+    toast(`$${v} reserved`,'Applied automatically at checkout');
+    let s=1800; clearInterval(timerI); timerI=setInterval(()=>{ s--; $('#timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); if(s<=0) clearInterval(timerI); },1000);
+  });
+
+  // theme
+  $$('#theme button').forEach(b=>b.addEventListener('click',()=>{ $$('#theme button').forEach(x=>x.classList.toggle('on',x===b)); $('#screen').classList.toggle('bone',b.dataset.t==='bone'); }));
+
+  // device: app or web portal
+  $$('#device button').forEach(b=>b.addEventListener('click',()=>{ $$('#device button').forEach(x=>x.classList.toggle('on',x===b)); const w=b.dataset.d==='web';
+    $('.phone').classList.toggle('web',w); $('#screen').classList.toggle('web',w); $('.stage').classList.toggle('webmode',w); }));
+
+  // admin: QR batch generation
+  $('#genBatch').addEventListener('click',()=>{
+    const btn=$('#genBatch'); if(btn.dataset.done) { toast('Print files ready','Drop 04 · 5,000 signed QR codes'); return; }
+    btn.disabled=true; btn.textContent='…'; $('#prog').style.display='block'; let n=0;
+    const t=setInterval(()=>{ n=Math.min(5000,n+250); $('#prog i').style.width=(n/50)+'%'; $('#batchTxt').textContent=`${n.toLocaleString()} of 5,000 signed · LD-04-0000001 onward`;
+      if(n>=5000){ clearInterval(t); btn.disabled=false; btn.dataset.done=1; btn.textContent='Download'; $('#batchTxt').textContent='5,000 unique, signed serials ready to print'; } },60);
+  });
+
+  // tour
+  let tourT=[], touring=false;
+  function stopTour(){ tourT.forEach(clearTimeout); tourT=[]; touring=false; $('#tour').classList.remove('playing'); $('#tour span').textContent='Play guided tour'; }
+  $('#tour').addEventListener('click',()=>{
+    if(touring){ stopTour(); return; }
+    touring=true; $('#tour').classList.add('playing'); $('#tour span').textContent='Stop tour';
+    const q=[[0,()=>go('welcome')],[1800,()=>go('home')],[4400,()=>go('scan')],[5800,runScan],[10600,()=>go('wardrobe')],[12800,()=>openSheet(0)],[15600,()=>go('earn')],[18200,()=>$('#submitVid').click()],[20600,()=>go('wallet')],[22200,approve],[24800,()=>{const s=$('#slider');s.value=Math.min(10,Math.floor(avail));$('#rAmt').textContent='$'+s.value;}],[25800,()=>$('#reserve').click()],[29500,stopTour]];
+    q.forEach(([t,f])=>tourT.push(setTimeout(f,t)));
+  });
+  $$('.step').forEach(s=>s.addEventListener('click',()=>{ stopTour(); if(s.dataset.step==='verified'&&!registered){ go('scan'); setTimeout(runScan,500);} else go(s.dataset.step); }));
+
+  $$('.view').forEach(v=>{ if(!v.classList.contains('on')) v.classList.add('gone'); });
+  paint(); renderHome(); $$('.step')[0].classList.add('on');
+})();
+</script>
+</body>
+</html>
